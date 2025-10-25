@@ -79,6 +79,10 @@ export async function buildCommand(config: BuildConfig): Promise<void> {
   const base64Result = await wasm2base64(wasmFile);
   console.log(base64Result.summary);
   await base64File.writeText([
+    "// @generated file from build.ts -- do not edit",
+    "// deno-lint-ignore-file",
+    "// deno-fmt-ignore-file",
+    "// eslint-disable",
     `export const sizeIn: number = ${base64Result.compressedSize} as const;`,
     `export const sizeOut: number = ${base64Result.uncompressedSize} as const;`,
     `export const data: string = ${
@@ -409,11 +413,8 @@ async function wasm2base64(file: Path): Promise<WasmBase64Result> {
 
 /* Helper Functions */
 async function computeFileSize(file: Path): Promise<number> {
-  const data: Uint8Array = await file.readBytes();
-  // const stat = await file.stat();
-  // if (!stat)
-  //   throw new Error(`can\'t read file size: ${file.toString()}`);
-  return data.length;
+  // `file.stat().size` sometimes doesn't return the correct size.
+  return (await file.readBytes()).length;
 }
 
 function pathRelative(from: Path, to: Path): string {
@@ -502,19 +503,6 @@ function getSeparator(locale?: string): Separator {
     ).charAt(0),
   };
 }
-
-// const NUMBER_REGEX = new RegExp('(\\d+?)(?=(\\d{3})+(?!\\d)|$)', 'g');
-// /// Formats a number into string format with thousand separators
-// function formatDecimal (value: string, separator = ','): string {
-//   const isNegative = value[0].startsWith('-');
-//   const matched = isNegative
-//     ? value.substring(1).match(NUMBER_REGEX)
-//     : value.match(NUMBER_REGEX);
-
-//   return matched
-//     ? `${isNegative ? '-' : ''}${matched.join(separator)}`
-//     : value;
-// }
 
 /// Formats a number into string format with thousand separators
 function formatKilobytes(bytes: number, locale = "en"): string {

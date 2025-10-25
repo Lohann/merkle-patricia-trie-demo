@@ -1,3 +1,7 @@
+// Copyright 2025 Lohann Paterno Coutinho Ferreira <developer@lohann.dev>
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import { xxh32raw } from "./xxhash32.ts";
 
 function key2string(key: Uint8Array): number {

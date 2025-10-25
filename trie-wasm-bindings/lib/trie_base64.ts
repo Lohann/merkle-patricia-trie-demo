@@ -1,7 +1,10 @@
+// @generated file from build.ts -- do not edit
+// deno-lint-ignore-file
+// deno-fmt-ignore-file
+// eslint-disable
 export const sizeIn: number = 67190 as const;
 export const sizeOut: number = 147036 as const;
-export const data: string =
-  "eNrUvQ2cXVV5779fzj5nZs7MZAcCCZkQ1j5EHCADk7dJMvjCRnk\
+export const data: string = "eNrUvQ2cXVV5779fzj5nZs7MZAcCCZkQ1j5EHCADk7dJMvjCRnk\
 TA+rVSnvVkJcJMAmEvBhA0QSIiko1KFgEqlFRohKLlrZpL1Va6W20tOZWbPn3pi23pS3/+6e39F5qaUv\
 l//09a+1zzkwG9fO/fv6fzxWz1pqz115r7bWe51nP81vPWitat+OaOIqi+Gvx/CuS3bujK9Ldu3fHuy2\
 K9AvpGmn+iPmXKWnp6nfiuv3Irw2fIBXx7tatVX7yRPFW/rXzkuoJmVXaVp6qLoW8lW5VyLs36Snx+0L\
