@@ -465,7 +465,6 @@ export class ByteBuffer {
     const buffer = this.#buffer.transfer(newByteLength);
     this.#size = 0;
     this.#ptr = 0;
-    // this.#buffer = new ArrayBuffer(0, { maxByteLength: 0 });
     this.#view = undefined;
     this.#byteView = undefined;
     return buffer;
@@ -479,7 +478,6 @@ export class ByteBuffer {
     const buffer = this.#buffer.transferToFixedLength(newByteLength);
     this.#size = 0;
     this.#ptr = 0;
-    // this.#buffer = new ArrayBuffer(0);
     this.#view = undefined;
     this.#byteView = undefined;
     return buffer;
