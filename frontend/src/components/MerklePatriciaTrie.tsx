@@ -248,7 +248,8 @@ function MerklePatriciaTrie({ context }: MerkleTrieProps) {
                   </button>
                 </div>
                 <div className="shirnk-0 px-6">
-                  {/* <div
+                  {
+                    /* <div
                     data-default-open=""
                     className="el-dropdown inline-block"
                   >
@@ -305,7 +306,8 @@ function MerklePatriciaTrie({ context }: MerkleTrieProps) {
                         </form>
                       </div>
                     </div>
-                  </div> */}
+                  </div> */
+                  }
                 </div>
               </div>
             </div>
