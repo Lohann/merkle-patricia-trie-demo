@@ -8,11 +8,11 @@ import { encodeHex } from "../utils/encoder.ts";
 import {
   type JSMerklePatriciaTrie,
   WasmContext,
-} from "../../../lib.exports.ts";
+} from "@scoped/trie-wasm-bindings";
 export {
   type JSMerklePatriciaTrie,
   WasmContext,
-} from "../../../lib.exports.ts";
+} from "@scoped/trie-wasm-bindings";
 import {
   type StorageValue,
   TransientStorage,

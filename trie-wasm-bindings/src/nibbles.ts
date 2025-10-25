@@ -1,3 +1,7 @@
+// Copyright 2025 Lohann Paterno Coutinho Ferreira <developer@lohann.dev>
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 export const NIBS: readonly string[] = [
   "0",
   "1",
@@ -163,11 +167,11 @@ type ChildrenMapCallback<C, U> = (
 ) => U;
 
 const identityCallback = <C, U>(
-  value: [Nib, any],
+  value: [Nib, unknown],
   _index: number,
   _children: TrieChildren<C>,
 ): U => {
-  return value[1];
+  return value[1] as U;
 };
 
 export class TrieChildren<C> {

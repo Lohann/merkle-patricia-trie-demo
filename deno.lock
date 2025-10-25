@@ -32,6 +32,7 @@
     "npm:@vitejs/plugin-react-swc@4.0.1": "4.0.1_vite@7.1.5__picomatch@4.0.3_@types+node@24.2.0",
     "npm:@vitejs/plugin-react@5.0.2": "5.0.2_vite@7.1.5__picomatch@4.0.3_@babel+core@7.28.4_@types+node@24.2.0",
     "npm:d3@7.9.0": "7.9.0_d3-selection@3.0.0",
+    "npm:fflate@0.8.2": "0.8.2",
     "npm:glob@11.0.3": "11.0.3",
     "npm:immutable@*": "5.1.4",
     "npm:immutable@5.1.4": "5.1.4",
@@ -1534,6 +1535,9 @@
         "picomatch"
       ]
     },
+    "fflate@0.8.2": {
+      "integrity": "sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A=="
+    },
     "foreground-child@3.3.1": {
       "integrity": "sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==",
       "dependencies": [
@@ -2092,7 +2096,8 @@
     "dependencies": [
       "jsr:@david/path@0.2.0",
       "jsr:@std/assert@1",
-      "jsr:@std/cli@1.0.23"
+      "jsr:@std/cli@1.0.23",
+      "npm:fflate@0.8.2"
     ],
     "members": {
       "bytemap": {
@@ -2124,6 +2129,11 @@
           "npm:vite-plugin-top-level-await@1.6.0",
           "npm:vite-plugin-wasm@3.5.0",
           "npm:vite@7.1.5"
+        ]
+      },
+      "trie-wasm-bindings": {
+        "dependencies": [
+          "jsr:@std/assert@1"
         ]
       }
     }

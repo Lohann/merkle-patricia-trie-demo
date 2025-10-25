@@ -1,0 +1,17 @@
+{
+  "name": "trie-wasm-bindings",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "tasks": {
+    "test": "deno test"
+  },
+  "license": "BSD-3-Clause",
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  },
+  "permissions": {
+    "default": {
+      "read": ["./lib"]
+    }
+  }
+}

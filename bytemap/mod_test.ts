@@ -5,8 +5,11 @@
 import { assertEquals } from "@std/assert";
 import { ByteMap } from "./mod.ts";
 
+const encoder = new TextEncoder();
+const utf8 = (str: string): Uint8Array => encoder.encode(str);
+
 Deno.test(function mapTest() {
-  const map: ByteMap<Uint8Array, number> = new ByteMap();
+  const map: ByteMap<number> = new ByteMap();
   const keys: Uint8Array[] = [
     new Uint8Array([1, 2, 3]),
     new Uint8Array([2, 3, 4]),
@@ -26,7 +29,7 @@ Deno.test(function mapTest() {
 });
 
 Deno.test(function keyEncoder() {
-  const map: ByteMap<Uint8Array | string, number> = new ByteMap();
+  const map: ByteMap<number> = new ByteMap();
   const keys = new Uint8Array([
     1,
     2,
@@ -53,18 +56,18 @@ Deno.test(function keyEncoder() {
   map.set(keys.subarray(6, 9), 3);
   map.set(keys.subarray(9, 15), 4);
   map.set(keys.subarray(15, 18), 5);
-  map.set("ola mundo!", 6);
+  map.set(utf8("ola mundo!"), 6);
   assertEquals(map.get(new Uint8Array([1, 2, 3])), 1);
   assertEquals(map.get(new Uint8Array([2, 3, 4])), 5);
   assertEquals(map.get(new Uint8Array([3, 4, 5])), 3);
   assertEquals(map.get(new Uint8Array([4, 5, 6, 7, 8, 9])), 4);
   assertEquals(map.get(new Uint8Array([2, 3, 4])), 5);
-  assertEquals(map.get("ola mundo!"), 6);
+  assertEquals(map.get(utf8("ola mundo!")), 6);
 
-  assertEquals(map.rawKey(keys.subarray(0, 3)), "010203");
-  assertEquals(map.rawKey(keys.subarray(3, 6)), "020304");
-  assertEquals(map.rawKey(keys.subarray(6, 9)), "030405");
-  assertEquals(map.rawKey(keys.subarray(9, 15)), "040506070809");
-  assertEquals(map.rawKey(keys.subarray(15, 18)), "020304");
-  assertEquals(map.rawKey("ola mundo!"), "6f6c61206d756e646f21");
+  assertEquals(map.rawKey(keys.subarray(0, 3)), 0xf59c78c4);
+  assertEquals(map.rawKey(keys.subarray(3, 6)), 0x3f0ed2d4);
+  assertEquals(map.rawKey(keys.subarray(6, 9)), 0x833c14fa);
+  assertEquals(map.rawKey(keys.subarray(9, 15)), 0x373bf689);
+  assertEquals(map.rawKey(keys.subarray(15, 18)), 0x3f0ed2d4);
+  assertEquals(map.rawKey(utf8("ola mundo!")), 0x9dc4d337);
 });

@@ -17,7 +17,7 @@ import { encodeHex, value2bytes } from "../utils/encoder.ts";
 import { RuntimeContext } from "../utils/runcode.ts";
 import DataTable from "./DataTable.tsx";
 import Cluster from "./Cluster.tsx";
-import { type WasmContext } from "../../../lib.exports.ts";
+import { type WasmContext } from "@scoped/trie-wasm-bindings";
 import {
   type Command,
   Commands,
