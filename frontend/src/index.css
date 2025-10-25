@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* background and page height */
+html {
+  min-height: 100%; /* make sure it is at least as tall as the viewport */
+  position: relative;
+}
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+#root {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* overflow: hidden; */
+  z-index: -1; /* Remove this line if it's not going to be a background! */
+
+  /* enable scroll */
+  scroll-padding: 0;
+  overflow: auto;
+}
+
+@layer components {
+  .button {
+    /*
+      equivalent to following tailwind classes:
+      block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold
+      text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2
+      focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500
+      dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500 cursor-pointer
+    */
+    display: block;
+    cursor: pointer;
+
+    /* text */
+    text-align: center;
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    font-weight: var(--font-weight-semibold);
+
+    border-radius: var(--radius-md);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2);
+
+    box-shadow:
+      var(--tw-inset-shadow),
+      var(--tw-inset-ring-shadow),
+      var(--tw-ring-offset-shadow),
+      var(--tw-ring-shadow),
+      var(--tw-shadow);
+
+    /* light */
+    background-color: var(--color-indigo-600);
+    @variant hover {
+      background-color: var(--color-indigo-500);
+    }
+    @variant focus-visible {
+      outline-color: var(--color-indigo-600);
+      outline-offset: 2px;
+      outline-style: var(--tw-outline-style);
+      outline-width: 2px;
+    }
+
+    /* dark */
+    @variant dark {
+      background-color: var(--color-indigo-500);
+      @variant hover {
+        background-color: var(--color-indigo-400);
+      }
+      @variant focus-visible {
+        outline-color: var(--color-indigo-500);
+      }
+    }
+  }
+
+  .data-closed {
+    [data-closed] {
+      --tw-scale-x: 95%;
+      --tw-scale-y: 95%;
+      --tw-scale-z: 95%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+    }
+    .scale-95 {
+      --tw-scale-x: 95%;
+      --tw-scale-y: 95%;
+      --tw-scale-z: 95%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+    }
+  }
+}
+/* block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500 cursor-pointer */

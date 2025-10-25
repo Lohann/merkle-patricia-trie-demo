@@ -1,0 +1,33 @@
+{
+  "workspace": ["./bytemap", "./frontend"],
+  "tasks": {
+    "dev": "deno task --cwd=frontend dev",
+
+    "test:bytemap": "deno task --cwd=bytemap test",
+    "test:wasm": "deno run --allow-read=lib mod.test.ts",
+    "test": {
+      "dependencies": ["test:bytemap", "test:wasm"]
+    },
+
+    "build:frontend": "deno task --cwd=frontend build",
+    "build:wasm": "deno run -P=wasmbuild ./main.ts --project=merkle-patricia-trie-js",
+    "build": {
+      "dependencies": ["build:wasm", "build:frontend"]
+    }
+  },
+  "nodeModulesDir": "auto",
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "@david/path": "jsr:@david/path@0.2.0",
+    "@std/cli": "jsr:@std/cli@1.0.23",
+    "@scoped/collections": "./bytemap"
+  },
+  "permissions": {
+    "wasmbuild": {
+      "env": ["HOME", "CARGO_ENCODED_RUSTFLAGS", "RUSTFLAGS"],
+      "read": ["lib", "target/wasm32-unknown-unknown"],
+      "write": ["lib"],
+      "run": true
+    }
+  }
+}

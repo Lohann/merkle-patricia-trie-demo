@@ -1,0 +1,24 @@
+[workspace.package]
+authors = ["Lohann Paterno Coutinho Ferreira <developer@lohann.dev>"]
+edition = "2021"
+license = "BSD-3-Clause"
+license-file = "LICENSE"
+repository = "https://github.com/Lohann/merkle-patricia-trie-demo.git"
+
+[workspace]
+resolver = "2"
+members = [
+  "rust/merkle-patricia-trie-js",
+]
+
+[profile.release]
+codegen-units = 1
+incremental = false
+lto = "fat"
+opt-level = "z"
+panic = "abort"
+# strip = "symbols"
+strip = "debuginfo"
+debug = false
+overflow-checks = false
+debug-assertions = false

@@ -1,0 +1,58 @@
+{
+  "tasks": {
+    "dev": "deno run -A --unstable-no-legacy-abort npm:vite --config=./vite.config.ts",
+    "build": "deno run -A npm:vite build --config ./vite.config.ts",
+    "server:start": "deno run -A --watch ./api/main.ts",
+    "serve": "deno run build && deno run server:start"
+  },
+  "imports": {
+    "@deno/vite-plugin": "npm:@deno/vite-plugin@1.0.5",
+    "@floating-ui/react": "npm:@floating-ui/react@0.27.16",
+    "@oak/oak": "jsr:@oak/oak@^17.1.6",
+    "@scoped/collections": "../bytemap",
+    "@std/assert": "jsr:@std/assert@^1.0.12",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@4.1.14",
+    "@tajpouria/cors": "jsr:@tajpouria/cors@1.2.1",
+    "@types/d3": "npm:@types/d3@7.4.3",
+    "@types/react": "npm:@types/react@^19.2.2",
+    "@vitejs/plugin-react": "npm:@vitejs/plugin-react@5.0.2",
+    "@vitejs/plugin-react-swc": "npm:@vitejs/plugin-react-swc@4.0.1",
+    "d3": "npm:d3@7.9.0",
+    "glob": "npm:glob@11.0.3",
+    "immutable": "npm:immutable@5.1.4",
+    "monaco-editor": "npm:monaco-editor@0.54.0",
+    "react": "npm:react@19.2.0",
+    "react-dom": "npm:react-dom@19.2.0",
+    "react-router-dom": "npm:react-router-dom@7.9.1",
+    "tailwindcss": "npm:tailwindcss@4.1.14",
+    "vite": "npm:vite@7.1.5",
+    "vite-plugin-svgr": "npm:vite-plugin-svgr@4.5.0",
+    "vite-plugin-top-level-await": "npm:vite-plugin-top-level-await@1.6.0",
+    "vite-plugin-wasm": "npm:vite-plugin-wasm@3.5.0"
+  },
+  "compilerOptions": {
+    "types": [
+      "react",
+      "react-dom",
+      "@types/react",
+      "@types/d3"
+    ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "deno.ns"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "permissions": {
+    "vite": {
+      "net": ["127.0.0.1:3000", "127.0.0.1:8000", "0.0.0.0:8000"],
+      "env": true,
+      "read": [
+        "vite.config.ts",
+        "../node_modules"
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+[package]
+name = "merkle-patricia-trie-js"
+version = "0.1.0"
+edition = "2021"
+authors = ["Lohann Paterno Coutinho Ferreira <developer@lohann.dev>"]
+license = "BSD-3-Clause"
+license-file.workspace = true
+repository.workspace = true
+
+[lib]
+name = "trie"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Wasm bindings
+wasm-bindgen = { version = "=0.2.104", default-features = false }
+js-sys = { version = "=0.3.81", default-features = false }
+
+# Merkle Patricia Trie
+sp-trie = { version = "=41.1.0", default-features = false }
+sp-core = { version = "=38.1.0", default-features = false }
+hash-db = { version = "=0.16.0", default-features = false }
+trie-db = { version = "=0.30.0", default-features = false }
+
+# Memory Management
+dlmalloc = { version = "=0.2.11", default-features = false, features = ["global"], optional = true }
+
+# Misc
+hex-literal = "=1.0.0"
+
+[features]
+default = ["enable-debug-log"]
+std = []
+enable-debug-log = []
+dlmalloc = ["dep:dlmalloc"]

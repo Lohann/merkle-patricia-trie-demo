@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Merkle Patricia Trie Demo</title>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <script inertia>
+      try {
+        if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+          document.documentElement.classList.add("macos");
+        }
+      } catch (_) {}
+    </script>
+  </head>
+  <body class="antialiased">
+    <div
+      id="root"
+      class="bg-gray-100 dark:bg-gray-900 scheme-dark min-h-full dark:outline"
+    >
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

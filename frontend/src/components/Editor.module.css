@@ -1,0 +1,8 @@
+/* .Editor {
+	width: 100vw;
+	height: 100vh;
+} */
+.Editor {
+  width: 100%;
+  height: 400px;
+}
