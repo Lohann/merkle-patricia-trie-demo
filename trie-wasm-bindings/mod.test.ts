@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { initialize, type WasmContext } from "./mod.ts";
-import { encodeHex } from "@scoped/collections/encoder";
+import { encodeHex } from "@scoped/utils";
 
 Deno.test(async function emptyRootMatches() {
   const ctx: WasmContext = await initialize();

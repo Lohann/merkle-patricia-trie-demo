@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import React from "react";
-import { Slab } from "../../../bytemap/slab.ts";
+import { Slab } from "@scoped/utils";
 import { type MapState } from "../reducers/enumerableMap.ts";
 import { type PortableEntry, type SelectedNodes } from "../reducers/trie.ts";
 

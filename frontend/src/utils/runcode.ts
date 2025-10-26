@@ -1,6 +1,6 @@
 import { createSandbox } from "./sandbox.ts";
 import { encodeHex } from "./encoder.ts";
-import { type WasmContext } from "../../../lib.exports.ts";
+import { type WasmContext } from "@scoped/trie-wasm-bindings";
 import { type Command, Commands } from "../reducers/index.ts";
 import {
   bindStateToStorage,

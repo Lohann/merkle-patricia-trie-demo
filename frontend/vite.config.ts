@@ -2,18 +2,15 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import "react";
 import "react-dom";
-import svgr from "vite-plugin-svgr";
 import deno from "@deno/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
-// import wasm from "vite-plugin-wasm";
-// import topLevelAwait from "vite-plugin-top-level-await";
 
 // https://vite.dev/config/
 export default defineConfig({
   // root: "dist",
   root: "./",
   publicDir: "public",
-  // base: "https://lohann.dev/",
+  base: "https://lohann.dev/",
   cacheDir: ".vite",
   envPrefix: [],
   server: {
@@ -23,12 +20,16 @@ export default defineConfig({
       allow: [".."],
     },
   },
-  plugins: [tailwindcss(), react(), svgr({ include: "**/*.svg" }), deno()],
+  plugins: [tailwindcss(), react(), deno()],
   optimizeDeps: {
     include: ["react/jsx-runtime"],
   },
   build: {
+    outDir: "dist",
+    copyPublicDir: true,
     cssMinify: true,
+    minify: true,
+    reportCompressedSize: true,
   },
   esbuild: { legalComments: "none" },
 });

@@ -1,4 +1,4 @@
-export { WasmContext } from "./src/lib.exports.ts";
+export { type TrieStorage, WasmContext } from "./src/lib.exports.ts";
 export { ChildrenIterator, type Nib, TrieChildren } from "./src/nibbles.ts";
 export {
   JSMerklePatriciaTrie,
@@ -7,8 +7,8 @@ export {
 } from "./src/trie.ts";
 export { type SyncInitInput } from "./lib/trie.js";
 
-import { atobRaw } from "@scoped/collections/decoder";
-import { encodeHex } from "@scoped/collections/encoder";
+import { atobRaw } from "@scoped/utils/decoder";
+import { encodeHex } from "@scoped/utils/encoder";
 import { data as wasmBase64, sizeIn, sizeOut } from "./lib/trie_base64.ts";
 import { type TrieWasmModule, WasmContext } from "./src/lib.exports.ts";
 import { unzlibSync } from "./src/fflate.ts";

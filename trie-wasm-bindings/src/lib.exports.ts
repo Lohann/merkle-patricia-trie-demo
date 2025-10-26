@@ -1,6 +1,4 @@
-import { ByteMap } from "@scoped/collections/bytemap";
-import { ByteBuffer } from "@scoped/collections/buffer";
-import { type Key, key2bytes } from "@scoped/collections/encoder";
+import { ByteBuffer, ByteMap, type Key, key2bytes } from "@scoped/utils";
 import type { JSMerklePatriciaTrie } from "./trie.ts";
 import type { InitOutput } from "../lib/trie.d.ts";
 export { JSTrieBuilder } from "./trie.ts";
