@@ -7,12 +7,14 @@ import { type BaseCommand } from "./common.ts";
 import { encodeHex } from "../utils/encoder.ts";
 import {
   type JSMerklePatriciaTrie,
+  type Nib,
   WasmContext,
-} from "../../../lib.exports.ts";
+} from "@scoped/trie-wasm-bindings";
 export {
   type JSMerklePatriciaTrie,
+  type Nib,
   WasmContext,
-} from "../../../lib.exports.ts";
+} from "@scoped/trie-wasm-bindings";
 import {
   type StorageValue,
   TransientStorage,
@@ -23,8 +25,6 @@ import {
   MapActions,
   type MapState,
 } from "./enumerableMap.ts";
-import { type Nib } from "../../../nibbles.ts";
-export { type Nib } from "../../../nibbles.ts";
 
 /****************
  *     State    *

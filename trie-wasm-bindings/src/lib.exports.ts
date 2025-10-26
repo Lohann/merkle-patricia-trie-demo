@@ -1,12 +1,10 @@
-import { ByteBuffer, ByteMap } from "./bytemap/mod.ts";
-import { type Key, key2bytes } from "./bytemap/encoder.ts";
-import { type Nib, TrieChildren } from "./nibbles.ts";
-
-interface WasmExt extends WebAssembly.Module {
-  memory: WebAssembly.Memory;
-  __ext_call: (a: number, b: number) => bigint;
-  __ext_list_nodes: () => JSMerklePatriciaTrie;
-}
+import { ByteMap } from "@scoped/collections/bytemap";
+import { ByteBuffer } from "@scoped/collections/buffer";
+import { type Key, key2bytes } from "@scoped/collections/encoder";
+import type { JSMerklePatriciaTrie } from "./trie.ts";
+import type { InitOutput } from "../lib/trie.d.ts";
+export { JSTrieBuilder } from "./trie.ts";
+export type TrieWasmModule = InitOutput;
 
 function __ext_log(memory: Uint8Array, ptr: number, len: number) {
   ptr = ptr >>> 0;
@@ -170,7 +168,6 @@ export class HostFn {
       return ReturnCode.Reverted;
     }
     const key = memory.subarray(key_ptr / 1, key_ptr / 1 + key_len);
-    const value = instance.storage.getStorage(key);
     instance.storage.deleteStorage(key);
     return ReturnCode.Success;
   }
@@ -184,7 +181,7 @@ export interface TrieStorage {
   clear(): void;
 }
 
-export class DefaultTrieStorage extends ByteMap<Uint8Array, Uint8Array>
+export class DefaultTrieStorage extends ByteMap<Uint8Array>
   implements TrieStorage {
   getStorage(key: Uint8Array): Uint8Array | undefined {
     return this.get(key);
@@ -203,7 +200,7 @@ export class DefaultTrieStorage extends ByteMap<Uint8Array, Uint8Array>
     }
   }
   deleteStorage(key: Uint8Array): void {
-    const rawKey = this.rawKey(key.slice());
+    const rawKey = super.rawKey(key.slice());
     this.map.delete(rawKey);
   }
   clear(): void {
@@ -212,7 +209,7 @@ export class DefaultTrieStorage extends ByteMap<Uint8Array, Uint8Array>
 }
 
 export class WasmContext {
-  private instance: WasmExt;
+  private instance: TrieWasmModule;
   private memory: Uint8Array;
   private merkleRoot: Uint8Array;
   public storage: TrieStorage;
@@ -231,7 +228,8 @@ export class WasmContext {
     capacity: 1024,
   });
 
-  constructor(wasm: WasmExt, storage?: TrieStorage) {
+  constructor(wasm: TrieWasmModule, storage?: TrieStorage) {
+    WasmContext.SHARED_INPUT_BUFFER.cursor = 0;
     this.instance = wasm;
     this.memory = new Uint8Array(wasm.memory.buffer);
     this.storage = storage ?? new DefaultTrieStorage();
@@ -351,101 +349,5 @@ export class WasmContext {
       this.memory = new Uint8Array(this.instance.memory.buffer);
     }
     return this.memory;
-  }
-}
-
-export interface MerklePatriciaTrieNode {
-  id: string | null;
-  depth: number;
-  nibbles: string | null;
-  value: string | null;
-  encoded: string | null;
-  children: { [key: Nib]: MerklePatriciaTrieNode };
-}
-
-export class JSMerklePatriciaTrie {
-  readonly id?: string;
-  readonly depth: number;
-  readonly parent?: WeakRef<JSMerklePatriciaTrie>;
-  readonly nibbles?: string;
-  readonly value?: string;
-  readonly raw_bytes?: string;
-  readonly children: TrieChildren<JSMerklePatriciaTrie>;
-
-  constructor(
-    children: TrieChildren<JSMerklePatriciaTrie>,
-    depth: number,
-    id?: string,
-    nibbles?: string,
-    value?: string,
-    raw_bytes?: string,
-    parent?: WeakRef<JSMerklePatriciaTrie>,
-  ) {
-    this.id = id;
-    this.depth = depth;
-    this.parent = parent;
-    this.nibbles = nibbles;
-    this.value = value;
-    this.raw_bytes = raw_bytes;
-    this.children = children;
-  }
-
-  public toJSON(): MerklePatriciaTrieNode {
-    return {
-      id: this.id ?? null,
-      depth: this.depth,
-      nibbles: this.nibbles ?? null,
-      value: this.value ?? null,
-      encoded: this.raw_bytes ?? null,
-      children: this.children.toObject(([, trie]) => trie.toJSON()),
-    };
-  }
-}
-
-export class JSTrieBuilder {
-  public id?: string;
-  public nibbles?: string;
-  public value?: string;
-  public raw_bytes?: string;
-  public children: TrieChildren<JSTrieBuilder>;
-
-  constructor() {
-    this.id = undefined;
-    this.nibbles = undefined;
-    this.value = undefined;
-    this.raw_bytes = undefined;
-    this.children = new TrieChildren();
-  }
-
-  public push_child(nib: number, child: JSTrieBuilder) {
-    if (!(child instanceof JSTrieBuilder)) {
-      throw new Error("child must be of type MerklePatriciaTrieBuilder");
-    }
-    this.children.set(nib, child);
-  }
-
-  private _build(
-    depth: number,
-    parent?: WeakRef<JSMerklePatriciaTrie>,
-  ): JSMerklePatriciaTrie {
-    const children: TrieChildren<JSMerklePatriciaTrie> = new TrieChildren();
-    const root = new JSMerklePatriciaTrie(
-      children,
-      depth,
-      this.id,
-      this.nibbles,
-      this.value,
-      this.raw_bytes,
-      parent,
-    );
-    this.children.forEach(([nib, child]) => {
-      const n = child._build(depth + 1, new WeakRef(root));
-      children.set(nib, n);
-    });
-    return root;
-  }
-
-  public build(): JSMerklePatriciaTrie {
-    return this._build(0);
   }
 }

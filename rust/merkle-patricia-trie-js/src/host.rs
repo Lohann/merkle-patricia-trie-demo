@@ -77,7 +77,7 @@ fn extract_from_slice(output: &mut &mut [u8], new_len: usize) {
 pub(crate) mod ext {
     use wasm_bindgen::prelude::*;
 
-    #[wasm_bindgen(raw_module = "../lib.exports.ts")]
+    #[wasm_bindgen(raw_module = "../src/lib.exports.ts")]
     extern "C" {
         pub(crate) type HostFn;
 

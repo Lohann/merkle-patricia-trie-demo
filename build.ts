@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import { Path } from "@david/path";
+import { zlibSync } from "fflate";
 import { CargoWorkspace, type WasmCrate } from "./manifest.ts";
 
 export interface BuildConfig {
@@ -30,6 +31,13 @@ interface CargoBuildParams {
   ENV_VARS: { [key: string]: string };
 }
 
+interface WasmBase64Result {
+  uncompressedSize: number;
+  compressedSize: number;
+  base64: string;
+  summary: string;
+}
+
 export async function buildCommand(config: BuildConfig): Promise<void> {
   // Load Manifest
   const {
@@ -46,6 +54,8 @@ export async function buildCommand(config: BuildConfig): Promise<void> {
   const wasmFileName = `${wasmName}_bg.wasm`;
   const wasmFile = config.libDir.join(wasmFileName);
   const watFile = config.libDir.join(`${wasmName}_bg.wat`);
+  const base64FileName = `${wasmName}_base64.ts`;
+  const base64File = config.libDir.join(base64FileName);
 
   // Compile Rust to WebAssembly
   const cargoBuildParams = await compile(config);
@@ -56,7 +66,7 @@ export async function buildCommand(config: BuildConfig): Promise<void> {
 
   // Optimize WebAssembly Code
   const unoptimizedSize = await computeFileSize(wasmFile);
-  let optimizedSize = "skipped";
+  let optimizedSize = 0;
   if (config.optimize) {
     await optimizeWASM(config, wasmFile);
     optimizedSize = await computeFileSize(wasmFile);
@@ -64,6 +74,22 @@ export async function buildCommand(config: BuildConfig): Promise<void> {
 
   // Generate readable WAT file
   await generateWAT(config.root, wasmFile, watFile);
+
+  // Generate WASM to base64 compressed.
+  const base64Result = await wasm2base64(wasmFile);
+  console.log(base64Result.summary);
+  await base64File.writeText([
+    "// @generated file from build.ts -- do not edit",
+    "// deno-lint-ignore-file",
+    "// deno-fmt-ignore-file",
+    "// eslint-disable",
+    `export const sizeIn: number = ${base64Result.compressedSize} as const;`,
+    `export const sizeOut: number = ${base64Result.uncompressedSize} as const;`,
+    `export const data: string = ${
+      splitLines(base64Result.base64, 80, 80 - 28)
+    } as const;\n`,
+  ].join("\n"));
+  const base64FileSize = await computeFileSize(base64File);
 
   // Update comments in the generated files
   prependToFile(
@@ -93,6 +119,18 @@ export async function buildCommand(config: BuildConfig): Promise<void> {
   );
 
   // Summary
+  const originalKB = formatKilobytes(originalSize);
+  const unoptimizedKB = formatKilobytes(unoptimizedSize);
+  const optimizedKB = optimizedSize
+    ? formatKilobytes(optimizedSize)
+    : "skipped";
+  const compressedKB = formatKilobytes(base64Result.compressedSize);
+  const base64KB = formatKilobytes(base64FileSize);
+  const pad2 = [unoptimizedKB, optimizedKB, compressedKB, base64KB].reduce(
+    (a, b) => Math.max(a, b.length),
+    originalKB.length,
+  );
+
   const padding = Math.min(wasmName.length - 9, 0);
   console.log(
     ` ---------------------------- SUMMARY ----------------------------`,
@@ -102,12 +140,22 @@ export async function buildCommand(config: BuildConfig): Promise<void> {
   console.log(`BINDGEN:\n${wasmBindgenParams.join(" ")}\n`);
   console.log("  FILES:");
   console.log(
-    `    - ${
-      wasmFileName.padEnd(padding, " ")
-    }         (original): ${originalSize}`,
+    `    - ${wasmFileName.padEnd(padding, " ")}         (original): ${
+      originalKB.padStart(pad2)
+    }`,
   );
-  console.log(`    - ${wasmFileName} (unoptimized): ${unoptimizedSize}`);
-  console.log(`    - ${wasmFileName}   (optimized): ${optimizedSize}`);
+  console.log(
+    `    - ${wasmFileName}      (unoptimized): ${unoptimizedKB.padStart(pad2)}`,
+  );
+  console.log(
+    `    - ${wasmFileName}        (optimized): ${optimizedKB.padStart(pad2)}`,
+  );
+  console.log(
+    `    - ${base64FileName}     (compressed): ${compressedKB.padStart(pad2)}`,
+  );
+  console.log(
+    `    - ${base64FileName}         (base64): ${base64KB.padStart(pad2)}`,
+  );
   console.log(
     ` ------------------------------------------------------------------`,
   );
@@ -343,17 +391,32 @@ function prependToFile(filePath: Path, ...header: string[]): void {
   filePath.writeTextSync(content, { create: false, append: false });
 }
 
-/* Generate WAT file */
-async function computeFileSize(file: Path): Promise<string> {
-  const stat = await file.stat();
-  if (!stat) {
-    throw new Error(`can\'t read file size: ${file.toString()}`);
-  }
-  const kilobytes = Math.round(stat.size / 1024);
-  return `${kilobytes}kb`;
+/* Compress the Wasm binary */
+async function wasm2base64(file: Path): Promise<WasmBase64Result> {
+  const data: Uint8Array = await file.readBytes();
+  const compressed: Uint8Array = zlibSync(data, { level: 9 });
+  const base64 = compressed.toBase64();
+  const summary = [
+    `*** Compressed WASM: in=${formatKilobytes(data.length)}`,
+    `out=${formatKilobytes(compressed.length)}`,
+    `opt=${(100 * compressed.length / data.length).toFixed(2)}%`,
+    `base64=${formatKilobytes(base64.length)}`,
+  ].join(", ");
+  const result: WasmBase64Result = {
+    uncompressedSize: data.length,
+    compressedSize: compressed.length,
+    base64,
+    summary,
+  };
+  return result;
 }
 
 /* Helper Functions */
+async function computeFileSize(file: Path): Promise<number> {
+  // `file.stat().size` sometimes doesn't return the correct size.
+  return (await file.readBytes()).length;
+}
+
 function pathRelative(from: Path, to: Path): string {
   const relativePath = from.relative(to);
   if (relativePath.startsWith("/") || relativePath.length <= 2) {
@@ -405,4 +468,47 @@ function cargoBuildShellCMD(opt: CargoBuildParams): string {
 
   // Build the final command
   return `${envVars} ${CARGO_CMD.join(" ")}`;
+}
+
+function splitLines(str: string, maxLen: number, firstLine = maxLen): string {
+  const array = [];
+  let i = 0;
+  firstLine -= 1;
+  if (str.length >= firstLine) {
+    array.push(str.substring(0, firstLine));
+    i += firstLine;
+  }
+  while ((str.length - i) >= maxLen) {
+    array.push(str.substring(i, maxLen + i));
+    i += maxLen;
+  }
+  if (i < str.length) {
+    array.push(str.substring(i));
+  }
+  const lines = array.map((line) => {
+    const jsonStr = JSON.stringify(line);
+    return jsonStr.substring(1, jsonStr.length - 1);
+  }).join("\\\n");
+  return `"${lines}"`;
+}
+
+type Separator = { thousand: string; decimal: string };
+/// Get the decimal and thousand separator of a locale
+function getSeparator(locale?: string): Separator {
+  return {
+    decimal: (0.1).toLocaleString(locale, { useGrouping: false }).charAt(1),
+    thousand: (1000).toLocaleString(locale, { useGrouping: true }).replace(
+      /\d/g,
+      "",
+    ).charAt(0),
+  };
+}
+
+/// Formats a number into string format with thousand separators
+function formatKilobytes(bytes: number, locale = "en"): string {
+  const { decimal } = getSeparator(locale);
+  const n = (BigInt(bytes) * 10n) / 1024n;
+  const num = n / 10n;
+  const den = n % 10n;
+  return `${num}${decimal}${den}kb`;
 }

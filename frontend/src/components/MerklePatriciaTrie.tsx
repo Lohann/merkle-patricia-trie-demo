@@ -3,21 +3,12 @@
 // found in the LICENSE file.
 
 import React from "react";
-import {
-  Popover,
-  PopoverClose,
-  PopoverContent,
-  PopoverDescription,
-  PopoverHeading,
-  PopoverTrigger,
-} from "./Popover.tsx";
 import "../utils/index.js";
-import { createSandbox } from "../utils/sandbox.ts";
-import { encodeHex, value2bytes } from "../utils/encoder.ts";
+import { value2bytes } from "../utils/encoder.ts";
 import { RuntimeContext } from "../utils/runcode.ts";
 import DataTable from "./DataTable.tsx";
 import Cluster from "./Cluster.tsx";
-import { type WasmContext } from "../../../lib.exports.ts";
+import { type WasmContext } from "@scoped/trie-wasm-bindings";
 import {
   type Command,
   Commands,
@@ -25,13 +16,8 @@ import {
   reducer,
   type State,
 } from "../reducers/index.ts";
-import {
-  bindStateToStorage,
-  PortableEntry,
-  type State as TrieState,
-} from "../reducers/trie.ts";
+import { PortableEntry, type State as TrieState } from "../reducers/trie.ts";
 import { Editor, type IStandaloneCodeEditor } from "./Editor.tsx";
-import { isObject } from "../utils/typeCheck.ts";
 
 export type DataNode = ValueNode | BranchNode;
 

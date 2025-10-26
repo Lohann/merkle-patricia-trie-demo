@@ -119,8 +119,8 @@ export interface BufferOptions {
 
 export class ByteBuffer {
   #buffer: ArrayBuffer;
-  #view: DataView;
-  #byteView: Uint8Array;
+  #view?: DataView;
+  #byteView?: Uint8Array;
   #size: number;
   #ptr: number;
   #grow: GrowCallback;
@@ -141,12 +141,24 @@ export class ByteBuffer {
     this.#buffer = buffer;
     this.#size = 0;
     this.#ptr = 0;
-    this.#view = new DataView(
-      this.#buffer,
-      0,
-      this.#buffer.byteLength,
-    );
-    this.#byteView = new Uint8Array(buffer);
+    this.#view = undefined;
+    this.#byteView = undefined;
+  }
+
+  private get view(): DataView {
+    if (this.#view === undefined || this.#view.buffer !== this.#buffer) {
+      this.#view = new DataView(this.#buffer, 0, this.#buffer.byteLength);
+    }
+    return this.#view;
+  }
+
+  private get bytes(): Uint8Array {
+    if (
+      this.#byteView === undefined || this.#byteView.buffer !== this.#buffer
+    ) {
+      this.#byteView = new Uint8Array(this.#buffer, 0, this.#buffer.byteLength);
+    }
+    return this.#byteView;
   }
 
   private _writeArray<T extends number | bigint>(
@@ -169,7 +181,7 @@ export class ByteBuffer {
       const array = new arrayConstructor(this.#buffer, offset, len);
       array.set(input);
     } else {
-      const dataView = this.#view;
+      const dataView = this.view;
       for (let i = 0; i < len; i++) {
         setValue.call(dataView, offset, input[i], littleEndian);
         offset += size;
@@ -192,7 +204,7 @@ export class ByteBuffer {
     if (maxByteLength < newCapacity) {
       throw new Error("out of bounds: maxByteLength < capacity");
     }
-    let buffer: ArrayBuffer | undefined = growOrAlloc(
+    const buffer: ArrayBuffer | undefined = growOrAlloc(
       newCapacity,
       maxByteLength,
       this.#buffer,
@@ -201,11 +213,9 @@ export class ByteBuffer {
       const detached = new Uint8Array(this.#buffer.transfer(), 0, this.#size);
       (new Uint8Array(buffer)).set(detached, 0);
       this.#buffer = buffer;
-    } else {
-      buffer = this.#buffer;
     }
-    this.#view = new DataView(buffer, 0, buffer.byteLength);
-    this.#byteView = new Uint8Array(buffer, 0, buffer.byteLength);
+    this.#view = undefined;
+    this.#byteView = undefined;
   }
 
   private reserveBytes(count: number): number {
@@ -221,38 +231,38 @@ export class ByteBuffer {
     offset ??= 0;
     const end = offset + output.length;
     assertInteger(end, 0, this.#size);
-    output.set(this.#byteView.subarray(offset, end));
+    output.set(this.bytes.subarray(offset, end));
   }
 
   public slice(begin?: number, end?: number): Uint8Array {
     begin ??= 0;
     end ??= this.#ptr;
     assertInteger(end, begin, this.#size);
-    return this.#byteView.slice(begin, end);
+    return this.bytes.slice(begin, end);
   }
 
   public writeU8(val: number): ByteBuffer {
     assertInteger(val, 0, 0xff);
     const offset = this.reserveBytes(1);
-    this.#byteView[offset] = val;
+    this.bytes[offset] = val;
     return this;
   }
 
   public writeU8List(bytes: ArrayLike<number>): ByteBuffer {
     const offset = this.reserveBytes(bytes.length);
-    this.#byteView.set(bytes, offset);
+    this.bytes.set(bytes, offset);
     return this;
   }
 
   public readU8(offset: number): number {
     assertInteger(offset, 0, this.#size - 1);
-    return this.#byteView[offset];
+    return this.bytes[offset];
   }
 
   public writeI8(val: number): ByteBuffer {
     assertInteger(val, -0x80, 0x7f);
     const offset = this.reserveBytes(1);
-    this.#view.setInt8(offset, val);
+    this.view.setInt8(offset, val);
     return this;
   }
 
@@ -266,13 +276,13 @@ export class ByteBuffer {
 
   public readI8(offset: number): number {
     assertInteger(offset, 0, this.#size - 1);
-    return this.#view.getInt8(offset);
+    return this.view.getInt8(offset);
   }
 
   public writeI16(val: number, littleEndian?: boolean): ByteBuffer {
     assertInteger(val, -0x8000, 0x7fff);
     const offset = this.reserveBytes(2);
-    this.#view.setInt16(offset, val, littleEndian);
+    this.view.setInt16(offset, val, littleEndian);
     return this;
   }
 
@@ -291,13 +301,13 @@ export class ByteBuffer {
 
   public readI16(offset: number, littleEndian?: boolean): number {
     assertInteger(offset, 0, this.#size - 2);
-    return this.#view.getInt16(offset, littleEndian);
+    return this.view.getInt16(offset, littleEndian);
   }
 
   public writeU16(val: number, littleEndian?: boolean): ByteBuffer {
     assertInteger(val, 0, 0xffff);
     const offset = this.reserveBytes(2);
-    this.#view.setUint16(offset, val, littleEndian);
+    this.view.setUint16(offset, val, littleEndian);
     return this;
   }
 
@@ -316,13 +326,13 @@ export class ByteBuffer {
 
   public readU16(offset: number, littleEndian?: boolean): number {
     assertInteger(offset, 0, this.#size - 2);
-    return this.#view.getUint16(offset, littleEndian);
+    return this.view.getUint16(offset, littleEndian);
   }
 
   public writeI32(val: number, littleEndian?: boolean): ByteBuffer {
     assertInteger(val, -0x80000000, 0x7fffffff);
     const offset = this.reserveBytes(4);
-    this.#view.setInt32(offset, val, littleEndian);
+    this.view.setInt32(offset, val, littleEndian);
     return this;
   }
 
@@ -341,13 +351,13 @@ export class ByteBuffer {
 
   public readI32(offset: number, littleEndian?: boolean): number {
     assertInteger(offset, 0, this.#size - 3);
-    return this.#view.getInt32(offset, littleEndian);
+    return this.view.getInt32(offset, littleEndian);
   }
 
   public writeU32(val: number, littleEndian?: boolean): ByteBuffer {
     assertInteger(val, 0, 0xffffffff);
     const offset = this.reserveBytes(4);
-    this.#view.setUint32(offset, val, littleEndian);
+    this.view.setUint32(offset, val, littleEndian);
     return this;
   }
 
@@ -367,14 +377,14 @@ export class ByteBuffer {
   public readU32(offset: number, littleEndian?: boolean): number {
     littleEndian ??= NATIVE_LITTLE_ENDIAN;
     assertInteger(offset, 0, this.#size - 7);
-    return this.#view.getUint32(offset, littleEndian);
+    return this.view.getUint32(offset, littleEndian);
   }
 
   public writeI64(val: bigint, littleEndian?: boolean): ByteBuffer {
     littleEndian ??= NATIVE_LITTLE_ENDIAN;
     assertBigInt(val, -0x8000000000000000n, 0x7fffffffffffffffn);
     const offset = this.reserveBytes(8);
-    this.#view.setBigInt64(offset, val, littleEndian);
+    this.view.setBigInt64(offset, val, littleEndian);
     return this;
   }
 
@@ -394,14 +404,14 @@ export class ByteBuffer {
   public readI64(offset: number, littleEndian?: boolean): bigint {
     littleEndian ??= NATIVE_LITTLE_ENDIAN;
     assertInteger(offset, 0, this.#size - 7);
-    return this.#view.getBigInt64(offset, littleEndian);
+    return this.view.getBigInt64(offset, littleEndian);
   }
 
   public writeU64(val: bigint, littleEndian?: boolean): ByteBuffer {
     littleEndian ??= NATIVE_LITTLE_ENDIAN;
     assertBigInt(val, 0n, 0xffffffffffffffffn);
     const offset = this.reserveBytes(8);
-    this.#view.setBigUint64(offset, val, littleEndian);
+    this.view.setBigUint64(offset, val, littleEndian);
     return this;
   }
 
@@ -421,29 +431,29 @@ export class ByteBuffer {
   public readU64(offset: number, littleEndian?: boolean): bigint {
     littleEndian ??= NATIVE_LITTLE_ENDIAN;
     assertInteger(offset, 0, this.#size - 7);
-    return this.#view.getBigUint64(offset, littleEndian);
+    return this.view.getBigUint64(offset, littleEndian);
   }
 
   public writeF64(val: number, littleEndian?: boolean): ByteBuffer {
     littleEndian ??= NATIVE_LITTLE_ENDIAN;
     const offset = this.reserveBytes(8);
-    this.#view.setFloat64(offset, val, littleEndian);
+    this.view.setFloat64(offset, val, littleEndian);
     return this;
   }
 
   public readF64(offset: number, littleEndian?: boolean): number {
     littleEndian ??= NATIVE_LITTLE_ENDIAN;
     assertInteger(offset, 0, this.#size - 7);
-    return this.#view.getFloat64(offset, littleEndian);
+    return this.view.getFloat64(offset, littleEndian);
   }
 
   public shrink(size?: number): void {
     size ??= this.#ptr;
     const capacity = this.capacity;
     if (size < capacity) {
-      const buffer = this.#buffer.transferToFixedLength(size);
-      this.#view = new DataView(buffer);
-      this.#byteView = new Uint8Array(buffer);
+      this.#buffer = this.#buffer.transferToFixedLength(size);
+      this.#view = undefined;
+      this.#byteView = undefined;
     }
   }
 
@@ -451,18 +461,32 @@ export class ByteBuffer {
     if (this.#buffer.detached || this.#buffer.maxByteLength === 0) {
       throw new Error("buffer already taken");
     }
+    newByteLength ??= this.length;
     const buffer = this.#buffer.transfer(newByteLength);
     this.#size = 0;
-    this.#buffer = new ArrayBuffer(0, { maxByteLength: 0 });
-    this.#view = new DataView(this.#buffer, 0, 0);
-    this.#byteView = new Uint8Array(this.#buffer, 0, 0);
+    this.#ptr = 0;
+    this.#view = undefined;
+    this.#byteView = undefined;
+    return buffer;
+  }
+
+  public transferToFixedLength(newByteLength?: number): ArrayBuffer {
+    if (this.#buffer.detached || this.#buffer.maxByteLength === 0) {
+      throw new Error("buffer already taken");
+    }
+    newByteLength ??= this.length;
+    const buffer = this.#buffer.transferToFixedLength(newByteLength);
+    this.#size = 0;
+    this.#ptr = 0;
+    this.#view = undefined;
+    this.#byteView = undefined;
     return buffer;
   }
 
   public subarray(begin: number, end?: number): Uint8Array {
     end ??= this.#ptr;
     assertInteger(end, begin, this.#ptr);
-    return this.#byteView.subarray(begin, end);
+    return this.bytes.subarray(begin, end);
   }
 
   public alloc(size: number, align = 1): Uint8Array {
@@ -471,7 +495,7 @@ export class ByteBuffer {
     const begin = (this.#ptr + align - 1 | 0) & (~(align - 1 | 0) | 0);
     const end = begin + size;
     this._grow(end);
-    return this.#byteView.subarray(begin, end);
+    return this.bytes.subarray(begin, end);
   }
 
   public get cursor(): number {
@@ -485,11 +509,11 @@ export class ByteBuffer {
   }
 
   public get available(): number {
-    return this.capacity - this.#size;
+    return this.capacity - this.#ptr;
   }
 
   public get length(): number {
-    return this.#size;
+    return this.#ptr;
   }
 
   public get capacity(): number {

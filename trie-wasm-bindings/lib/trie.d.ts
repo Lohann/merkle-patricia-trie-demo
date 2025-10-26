@@ -10,6 +10,7 @@ export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __ext_call: (a: number, b: number) => bigint;
   readonly __ext_list_nodes: () => any;
+  readonly xxhash32: (a: number, b: number, c: number) => number;
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;

@@ -7,7 +7,7 @@ use alloc::vec::Vec;
 use js_sys::JsString;
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen(raw_module = "../lib.exports.ts")]
+#[wasm_bindgen(raw_module = "../src/lib.exports.ts")]
 extern "C" {
     pub type JSMerklePatriciaTrie;
 

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import { parseArgs as parseFlags } from "@std/cli/parse-args";
-import { Path } from "@david/path";
 
 export type Command = BuildCommand | HelpCommand;
 
@@ -30,9 +29,10 @@ export function parseArgs(rawArgs: string[]): Command {
     "--": true,
     string: [
       "features",
-      "project",
       "p",
-      "out",
+      "project",
+      "o",
+      "output",
       "stack-size",
       "profile",
       "lib-name",
@@ -96,7 +96,7 @@ export function parseArgs(rawArgs: string[]): Command {
       optimize: flags.optimize,
       profile: flags.profile,
       project: flags.p ?? flags.project,
-      outDir: flags.out,
+      outDir: flags.o ?? flags.output,
       cargoFlags: getCargoFlags(),
       stackSize,
       libName,

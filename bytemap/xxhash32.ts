@@ -1,13 +1,20 @@
+// MIT License
+//
+// Copyright (c) 2024 cgiosy
+//
+// Copied from https://github.com/cgiosy/xxh32/blob/main/src/raw.ts
+// The `getUint32` was replaced by a DataView object, which is more
+// suitable for arbitrary ArrayBufferLike inputs (Uint32List, Uint16List, etc..)
+//
+// It also adds an specialized `xxh32num` method, which hashes a
+// single 32bit integer, or 64bit float value.
+
 // deno-fmt-ignore-file
+// deno-lint-ignore-file
+// eslint-disable"
 const _BUFFER = new ArrayBuffer(128);
 const _DATAVIEW = new DataView(_BUFFER);
-const _BYTEVIEW = new Uint8Array(_BUFFER);
-const _ArrayBufferView =
-  Object.getPrototypeOf(Object.getPrototypeOf(_BYTEVIEW)).constructor;
-const _VISITED: Map<object, number> = new Map();
 
-const getUint32 = (arr: Uint8Array, i: number) =>
-  arr[i] | arr[i + 1 | 0] << 8 | arr[i + 2 | 0] << 16 | arr[i + 3 | 0] << 24;
 const rotl32 = (x: number, r: number) => (x << r) | (x >>> 32 - r);
 
 export const xxh32raw = (dataView: DataView, seed = 0) => {

@@ -4,7 +4,7 @@
 // deno-fmt-ignore-file
 // @ts-self-types="./trie.d.ts"
 
-import { HostFn, JSTrieBuilder } from '../lib.exports.ts';
+import { HostFn, JSTrieBuilder } from '../src/lib.exports.ts';
 
 let wasm;
 
@@ -160,7 +160,7 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbg_build_5704321917045dbd = function(arg0) {
+    imports.wbg.__wbg_build_08c9e0dd488349c2 = function(arg0) {
         const ret = arg0.build();
         return ret;
     };
@@ -175,18 +175,18 @@ function __wbg_get_imports() {
             wasm.__wbindgen_free(deferred0_0, deferred0_1, 1);
         }
     };
-    imports.wbg.__wbg_extclearstorage_4d0b69d8bdabea01 = function(arg0, arg1) {
+    imports.wbg.__wbg_extclearstorage_acbb358135bfe3a4 = function(arg0, arg1) {
         const ret = HostFn.__ext_clear_storage(arg0 >>> 0, arg1 >>> 0);
         return ret;
     };
-    imports.wbg.__wbg_extgetstorage_31721f8b8605fcd8 = function(arg0, arg1, arg2, arg3) {
+    imports.wbg.__wbg_extgetstorage_016f4ad03f0fa649 = function(arg0, arg1, arg2, arg3) {
         const ret = HostFn.__ext_get_storage(arg0 >>> 0, arg1 >>> 0, arg2 >>> 0, arg3 >>> 0);
         return ret;
     };
-    imports.wbg.__wbg_extinput_5825c283eb0f7b90 = function(arg0, arg1) {
+    imports.wbg.__wbg_extinput_1b9745c3d3c24527 = function(arg0, arg1) {
         HostFn.__ext_input(arg0 >>> 0, arg1 >>> 0);
     };
-    imports.wbg.__wbg_extsetstorage_a973aa4225217a40 = function(arg0, arg1, arg2, arg3) {
+    imports.wbg.__wbg_extsetstorage_5067351af2b602a9 = function(arg0, arg1, arg2, arg3) {
         const ret = HostFn.__ext_set_storage(arg0 >>> 0, arg1 >>> 0, arg2 >>> 0, arg3 >>> 0);
         return ret;
     };
@@ -194,27 +194,27 @@ function __wbg_get_imports() {
         const ret = String.fromCharCode(...getArrayU16FromWasm0(arg0, arg1));
         return ret;
     };
+    imports.wbg.__wbg_new_39c840ecaeb4b6bb = function() {
+        const ret = new JSTrieBuilder();
+        return ret;
+    };
     imports.wbg.__wbg_new_696871338071eacd = function() {
         const ret = new Error();
         return ret;
     };
-    imports.wbg.__wbg_new_89da56c0bf2abaf9 = function() {
-        const ret = new JSTrieBuilder();
-        return ret;
-    };
-    imports.wbg.__wbg_pushchild_2b161a6c3fb2a7e4 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbg_pushchild_ed022ed0d32611f5 = function(arg0, arg1, arg2) {
         arg0.push_child(arg1, arg2);
     };
-    imports.wbg.__wbg_setid_56afa68dc20a18bb = function(arg0, arg1) {
+    imports.wbg.__wbg_setid_1f9143cf7e46473f = function(arg0, arg1) {
         arg0.id = arg1;
     };
-    imports.wbg.__wbg_setnibbles_c1590ca24d8f321f = function(arg0, arg1) {
+    imports.wbg.__wbg_setnibbles_762000a34aacb1bc = function(arg0, arg1) {
         arg0.nibbles = arg1;
     };
-    imports.wbg.__wbg_setrawbytes_3f862dc1a45d026b = function(arg0, arg1) {
+    imports.wbg.__wbg_setrawbytes_5816dd8a851711a4 = function(arg0, arg1) {
         arg0.raw_bytes = arg1;
     };
-    imports.wbg.__wbg_setvalue_37a227996a1f9676 = function(arg0, arg1) {
+    imports.wbg.__wbg_setvalue_7f241b2ea58d5be7 = function(arg0, arg1) {
         arg0.value = arg1;
     };
     imports.wbg.__wbg_stack_9101b56200185855 = function(arg0, arg1) {
