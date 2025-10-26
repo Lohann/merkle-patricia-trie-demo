@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import { parseArgs as parseFlags } from "@std/cli/parse-args";
-import { Path } from "@david/path";
 
 export type Command = BuildCommand | HelpCommand;
 
