@@ -1,15 +1,13 @@
 {
-  "workspace": ["./bytemap", "./frontend", "./trie-wasm-bindings"],
+  "workspace": ["./utils", "./frontend", "./trie-wasm-bindings"],
   "tasks": {
     "dev": "deno task --cwd=frontend dev",
-
     "test:trie": "deno task --cwd=trie-wasm-bindings test",
-    "test:bytemap": "deno task --cwd=bytemap test",
+    "test:utils": "deno task --cwd=utils test",
     "test:wasm": "deno run --allow-read=lib mod.test.ts",
     "test": {
-      "dependencies": ["test:bytemap", "test:wasm"]
+      "dependencies": ["test:utils", "test:wasm"]
     },
-
     "build:frontend": "deno task --cwd=frontend build",
     "build:wasm": "deno run -P=wasmbuild ./main.ts --project=merkle-patricia-trie-js -o ./trie-wasm-bindings/lib",
     "build": {
@@ -19,10 +17,10 @@
   "nodeModulesDir": "auto",
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
+    "@std/path": "jsr:@std/path@1.1.2",
     "@david/path": "jsr:@david/path@0.2.0",
     "@std/cli": "jsr:@std/cli@1.0.23",
-    "@scoped/collections": "./bytemap",
-    "@scoped/trie-wasm-bindings": "./trie-wasm-bindings",
+    "@std/dotenv": "jsr:@std/dotenv@0.225.5",
     "fflate": "npm:fflate@0.8.2"
   },
   "permissions": {
@@ -32,5 +30,8 @@
       "write": ["trie-wasm-bindings/lib"],
       "run": true
     }
+  },
+  "compilerOptions": {
+    "strict": true
   }
 }

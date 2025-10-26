@@ -54,31 +54,6 @@ const hasOwnProperty = (obj: object, prop: PropertyKey): boolean => {
 const TO_STRING_SYMBOL: typeof Symbol.toStringTag = Symbol.toStringTag;
 const ITERATOR_SYMBOL: typeof Symbol.iterator = Symbol.iterator;
 
-// const _objToString = objectProto.toString;
-// // deno-lint-ignore no-explicit-any
-// function getRawTag(value: any): string {
-//   const isOwn = hasOwnProperty(value, TO_STRING_SYMBOL);
-//   const tag = value[TO_STRING_SYMBOL];
-
-//   let unmasked: boolean;
-//   try {
-//     value[TO_STRING_SYMBOL] = undefined;
-//     unmasked = true;
-//   } catch (_error) {
-//     unmasked = false;
-//   }
-
-//   const result = _objToString.call(value);
-//   if (unmasked) {
-//     if (isOwn) {
-//       value[TO_STRING_SYMBOL] = tag;
-//     } else {
-//       delete value[TO_STRING_SYMBOL];
-//     }
-//   }
-//   return result;
-// }
-
 /**
  * Converts an string or number to Nib.
  */

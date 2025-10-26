@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import { type TrieStorage } from "../../../lib.exports.ts";
+import { type TrieStorage } from "@scoped/trie-wasm-bindings";
 import { bytes2str, decodeHex, encodeHex } from "../utils/encoder.ts";
 
 function _encodeRefCounter(val: number): Uint8Array {

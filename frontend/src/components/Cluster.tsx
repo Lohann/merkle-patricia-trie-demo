@@ -2,12 +2,8 @@
 import * as Immutable from "immutable";
 import React from "react";
 import * as d3 from "d3";
-import {
-  type PortableEntry,
-  type SelectedNodes,
-  type TrieNode,
-} from "../reducers/trie.ts";
-import { Nib } from "../../../nibbles.ts";
+import { type SelectedNodes, type TrieNode } from "../reducers/trie.ts";
+import { Nib } from "@scoped/trie-wasm-bindings";
 import { type Command, Commands } from "../reducers/index.ts";
 
 enum NodeType {
@@ -512,10 +508,10 @@ function buildSvgState(
 
   Object.entries(leafs).forEach(([key, node]) => {
     if (node.value === null) return;
-    node.svgText.addEventListener("mouseenter", (ev: MouseEvent) => {
+    node.svgText.addEventListener("mouseenter", (_ev: MouseEvent) => {
       dispatch(Commands.trie.highlight({ [key]: "red" }));
     });
-    node.svgText.addEventListener("mouseleave", (ev: MouseEvent) => {
+    node.svgText.addEventListener("mouseleave", (_ev: MouseEvent) => {
       dispatch(Commands.trie.highlight({ [key]: undefined }));
     });
   });

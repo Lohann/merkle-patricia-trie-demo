@@ -1,5 +1,5 @@
 {
-  "name": "trie-wasm-bindings",
+  "name": "@scoped/trie-wasm-bindings",
   "version": "0.1.0",
   "exports": "./mod.ts",
   "tasks": {
@@ -13,5 +13,9 @@
     "default": {
       "read": ["./lib"]
     }
+  },
+  "lint": {
+    "include": ["src/", "mod.ts", "mod.test.ts"],
+    "exclude": ["lib"]
   }
 }
