@@ -21,8 +21,7 @@
     "@david/path": "jsr:@david/path@0.2.0",
     "@std/cli": "jsr:@std/cli@1.0.23",
     "@std/dotenv": "jsr:@std/dotenv@0.225.5",
-    "fflate": "npm:fflate@0.8.2",
-    "zod": "npm:zod@4.1.12"
+    "fflate": "npm:fflate@0.8.2"
   },
   "permissions": {
     "wasmbuild": {

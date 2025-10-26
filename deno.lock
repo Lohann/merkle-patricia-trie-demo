@@ -46,8 +46,7 @@
     "npm:react@19.2.0": "19.2.0",
     "npm:tailwindcss@4.1.16": "4.1.16",
     "npm:vite-plugin-svgr@4.5.0": "4.5.0_vite@7.1.12__picomatch@4.0.3_@svgr+core@8.1.0__@babel+core@7.28.5_@types+node@24.2.0",
-    "npm:vite@7.1.12": "7.1.12_picomatch@4.0.3_@types+node@24.2.0",
-    "npm:zod@4.1.12": "4.1.12"
+    "npm:vite@7.1.12": "7.1.12_picomatch@4.0.3_@types+node@24.2.0"
   },
   "jsr": {
     "@david/path@0.2.0": {
@@ -2052,9 +2051,6 @@
     },
     "yallist@3.1.1": {
       "integrity": "sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g=="
-    },
-    "zod@4.1.12": {
-      "integrity": "sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ=="
     }
   },
   "workspace": {
@@ -2064,8 +2060,7 @@
       "jsr:@std/cli@1.0.23",
       "jsr:@std/dotenv@0.225.5",
       "jsr:@std/path@1.1.2",
-      "npm:fflate@0.8.2",
-      "npm:zod@4.1.12"
+      "npm:fflate@0.8.2"
     ],
     "members": {
       "frontend": {
