@@ -11,6 +11,7 @@
     "jsr:@std/bytes@1": "1.0.6",
     "jsr:@std/cli@1.0.23": "1.0.23",
     "jsr:@std/crypto@1": "1.0.5",
+    "jsr:@std/dotenv@0.225.5": "0.225.5",
     "jsr:@std/encoding@*": "1.0.10",
     "jsr:@std/encoding@1": "1.0.10",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
@@ -21,6 +22,7 @@
     "jsr:@std/internal@^1.0.9": "1.0.12",
     "jsr:@std/media-types@1": "1.1.0",
     "jsr:@std/path@1": "1.1.2",
+    "jsr:@std/path@1.1.2": "1.1.2",
     "jsr:@std/path@^1.1.1": "1.1.2",
     "jsr:@tajpouria/cors@1.2.1": "1.2.1",
     "npm:@deno/vite-plugin@1.0.5": "1.0.5_vite@7.1.12__picomatch@4.0.3_@types+node@24.2.0",
@@ -44,7 +46,8 @@
     "npm:react@19.2.0": "19.2.0",
     "npm:tailwindcss@4.1.16": "4.1.16",
     "npm:vite-plugin-svgr@4.5.0": "4.5.0_vite@7.1.12__picomatch@4.0.3_@svgr+core@8.1.0__@babel+core@7.28.5_@types+node@24.2.0",
-    "npm:vite@7.1.12": "7.1.12_picomatch@4.0.3_@types+node@24.2.0"
+    "npm:vite@7.1.12": "7.1.12_picomatch@4.0.3_@types+node@24.2.0",
+    "npm:zod@4.1.12": "4.1.12"
   },
   "jsr": {
     "@david/path@0.2.0": {
@@ -100,6 +103,9 @@
     },
     "@std/crypto@1.0.5": {
       "integrity": "0dcfbb319fe0bba1bd3af904ceb4f948cde1b92979ec1614528380ed308a3b40"
+    },
+    "@std/dotenv@0.225.5": {
+      "integrity": "9ce6f9d0ec3311f74a32535aa1b8c62ed88b1ab91b7f0815797d77a6f60c922f"
     },
     "@std/encoding@1.0.10": {
       "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
@@ -2046,6 +2052,9 @@
     },
     "yallist@3.1.1": {
       "integrity": "sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g=="
+    },
+    "zod@4.1.12": {
+      "integrity": "sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ=="
     }
   },
   "workspace": {
@@ -2053,7 +2062,10 @@
       "jsr:@david/path@0.2.0",
       "jsr:@std/assert@1",
       "jsr:@std/cli@1.0.23",
-      "npm:fflate@0.8.2"
+      "jsr:@std/dotenv@0.225.5",
+      "jsr:@std/path@1.1.2",
+      "npm:fflate@0.8.2",
+      "npm:zod@4.1.12"
     ],
     "members": {
       "frontend": {

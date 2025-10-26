@@ -508,10 +508,10 @@ function buildSvgState(
 
   Object.entries(leafs).forEach(([key, node]) => {
     if (node.value === null) return;
-    node.svgText.addEventListener("mouseenter", (ev: MouseEvent) => {
+    node.svgText.addEventListener("mouseenter", (_ev: MouseEvent) => {
       dispatch(Commands.trie.highlight({ [key]: "red" }));
     });
-    node.svgText.addEventListener("mouseleave", (ev: MouseEvent) => {
+    node.svgText.addEventListener("mouseleave", (_ev: MouseEvent) => {
       dispatch(Commands.trie.highlight({ [key]: undefined }));
     });
   });

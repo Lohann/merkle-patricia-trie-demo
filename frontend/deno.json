@@ -1,9 +1,9 @@
 {
   "tasks": {
-    "dev": "deno run -A --unstable-no-legacy-abort npm:vite@7.1.12 --config=./vite.config.ts",
-    "build": "deno run -A npm:vite@7.1.12 build --config ./vite.config.ts --mode production",
-    "server:start": "deno run -A --watch ./api/main.ts",
-    "serve": "deno run build && deno run server:start"
+    "dev": "deno run --preload=../config.ts -A --unstable-no-legacy-abort npm:vite@7.1.12 --config=./vite.config.ts",
+    "build": "deno run --env-file -A npm:vite@7.1.12 build --config ./vite.config.ts --mode production",
+    "server:start": "deno run --env-file -A --watch ./api/main.ts",
+    "serve": "deno run --env-file build && deno --env-file run server:start"
   },
   "imports": {
     "@deno/vite-plugin": "npm:@deno/vite-plugin@1.0.5",
@@ -51,5 +51,9 @@
         "../node_modules"
       ]
     }
+  },
+  "lint": {
+    "include": ["src/", "vite.config.ts"],
+    "exclude": ["dist", ".vite"]
   }
 }
